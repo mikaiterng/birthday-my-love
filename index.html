@@ -53,11 +53,11 @@
 
         /* Glassmorphism Card */
         .glass-card {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 10px 40px 0 rgba(236, 72, 153, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 40px -10px rgba(236, 72, 153, 0.25);
         }
 
         /* Heart Balloon Animation */
@@ -86,39 +86,34 @@
             width: 100%;
             height: 100%;
             fill: #f9a8d4;
-            filter: drop-shadow(0px 4px 6px rgba(236,72,153,0.3));
+            filter: drop-shadow(0px 4px 6px rgba(236,72,153,0.4));
         }
 
         @keyframes floatUp {
             0% {
-                transform: translateY(0) scale(0.5) rotate(0deg);
+                transform: translateY(0) scale(0.5) rotate(-10deg);
                 opacity: 0;
             }
             10% {
-                opacity: 0.7;
+                opacity: 0.9;
             }
             90% {
-                opacity: 0.7;
+                opacity: 0.9;
             }
             100% {
-                transform: translateY(-120vh) scale(1.2) rotate(45deg);
+                transform: translateY(-120vh) scale(1.3) rotate(30deg);
                 opacity: 0;
             }
         }
 
-        /* Smooth Fade Transitions for Image and Text */
-        .fade-transition {
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        /* Slideshow Transitions */
+        .slide-transition {
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
         
-        .fade-out {
-            opacity: 0;
-            transform: scale(0.98);
-        }
-        
-        .fade-in {
-            opacity: 1;
-            transform: scale(1);
+        /* Message Box styling */
+        .toast-message {
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
     </style>
 </head>
@@ -127,95 +122,88 @@
     <!-- Heart Balloons Background Container -->
     <div class="balloon-container" id="balloonContainer"></div>
 
+    <!-- Toast Notification (Replaces alert) -->
+    <div id="toastBox" class="toast-message fixed top-5 left-1/2 transform -translate-x-1/2 -translate-y-4 opacity-0 z-50 bg-white/90 backdrop-blur border border-pink-200 text-pink-600 px-6 py-3 rounded-full shadow-lg font-medium flex items-center gap-3 pointer-events-none">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="toastText">Message here</span>
+    </div>
+
     <!-- Main Content Wrapper -->
-    <div class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 py-8 md:py-12">
+    <div class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 py-8">
         
-        <!-- Main Card -->
-        <div class="glass-card rounded-[2rem] w-full max-w-2xl p-6 md:p-10 text-center relative overflow-hidden">
+        <!-- Main Card (Narrower for Vertical Photos) -->
+        <div class="glass-card rounded-[2rem] w-full max-w-md p-6 md:p-8 text-center relative overflow-hidden">
             
-            <!-- Decorative corner elements -->
-            <div class="absolute -top-10 -left-10 text-pink-300 opacity-30 text-8xl transform -rotate-45 pointer-events-none">
+            <!-- Decorative corners -->
+            <div class="absolute -top-8 -left-8 text-pink-200 opacity-40 text-7xl transform -rotate-12">
                 <i class="fas fa-heart"></i>
             </div>
-            <div class="absolute -bottom-10 -right-10 text-pink-300 opacity-30 text-8xl transform rotate-45 pointer-events-none">
+            <div class="absolute -bottom-8 -right-8 text-pink-200 opacity-40 text-7xl transform rotate-12">
                 <i class="fas fa-heart"></i>
             </div>
 
             <!-- Header -->
-            <h1 class="text-4xl md:text-5xl font-cute font-bold text-pink-500 mb-2 drop-shadow-sm animate-pulse-slow">
-                Happy Birthday!
+            <h1 class="text-3xl md:text-4xl font-cute font-bold text-pink-500 mb-1 drop-shadow-sm animate-pulse-slow relative z-10">
+                Happy Birthday! 🎂
             </h1>
-            <h2 class="text-xl md:text-2xl text-pink-400 font-medium mb-6">
-                To My Dearest Love <i class="fas fa-heart text-pink-500 animate-bounce-slow inline-block"></i>
+            <h2 class="text-lg md:text-xl text-pink-400 font-medium mb-6 relative z-10">
+                To My Everything <i class="fas fa-heart text-pink-500 animate-bounce-slow inline-block text-sm"></i>
             </h2>
 
-            <!-- Synchronized Slideshow Section -->
-            <div class="w-full flex flex-col items-center mb-8 relative group">
+            <!-- Vertical Photo Slideshow Section with Text -->
+            <div class="relative w-full group mb-8 rounded-2xl overflow-hidden bg-white/40 shadow-inner border border-white p-2">
                 
-                <!-- Image Display -->
-                <div class="w-full aspect-[4/3] sm:aspect-[16/10] rounded-2xl overflow-hidden shadow-lg border-4 border-white bg-pink-50 relative">
-                    <img id="slideImage" src="" alt="Our Memory" class="w-full h-full object-cover fade-transition fade-in">
-                    
-                    <!-- Navigation Controls overlay on image -->
-                    <button onclick="prevSlide()" class="absolute left-3 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-pink-500 rounded-full w-10 h-10 flex items-center justify-center shadow-md transition duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button onclick="nextSlide()" class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-pink-500 rounded-full w-10 h-10 flex items-center justify-center shadow-md transition duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+                <!-- The Slider Track that holds grouped [Image + Text] items -->
+                <div class="overflow-hidden w-full rounded-xl">
+                    <div id="sliderTrack" class="flex w-full slide-transition items-stretch">
+                        <!-- Slides will be inserted here by JS -->
+                    </div>
                 </div>
 
-                <!-- Dynamic Message Section (Changes with Image) -->
-                <div class="bg-white/80 rounded-2xl p-6 shadow-sm mt-6 border border-pink-100 relative w-11/12 md:w-5/6 -mt-8 z-20 transition-all duration-300 hover:shadow-md">
-                    <i class="fas fa-quote-left text-pink-300 text-2xl absolute top-3 left-4 opacity-40"></i>
-                    
-                    <p id="slideMessage" class="text-lg md:text-xl leading-relaxed text-gray-700 font-cute relative pt-2 px-4 pb-1 fade-transition fade-in min-h-[80px] flex items-center justify-center">
-                        <!-- Text will be injected here via JS -->
-                    </p>
-                    
-                    <i class="fas fa-quote-right text-pink-300 text-2xl absolute bottom-3 right-4 opacity-40"></i>
-                </div>
+                <!-- Navigation Controls -->
+                <button onclick="prevSlide()" class="absolute left-4 top-1/3 transform -translate-y-1/2 bg-white/90 hover:bg-white text-pink-500 rounded-full w-10 h-10 flex items-center justify-center shadow-md transition duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100 z-20">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button onclick="nextSlide()" class="absolute right-4 top-1/3 transform -translate-y-1/2 bg-white/90 hover:bg-white text-pink-500 rounded-full w-10 h-10 flex items-center justify-center shadow-md transition duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100 z-20">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
 
-                <!-- Indicators -->
-                <div class="flex justify-center gap-2 mt-6" id="sliderIndicators">
-                    <!-- Dots will be inserted here by JS -->
-                </div>
+            <!-- Indicator Dots -->
+            <div class="flex justify-center gap-2 mb-8" id="sliderIndicators">
+                <!-- Dots will be inserted here by JS -->
             </div>
 
             <!-- Audio Player Section -->
-            <div class="flex flex-col items-center justify-center space-y-4 mt-4">
-                <p class="text-pink-600 font-medium text-sm md:text-base">
-                    🎵 เปิดเพลงเพื่อเพิ่มความหวานซึ้ง 🎵
+            <div class="flex flex-col items-center justify-center space-y-3 relative z-10 bg-pink-50/50 p-4 rounded-2xl border border-pink-100">
+                <p class="text-pink-600 font-medium text-sm">
+                    🎵 เปิดเพลงประกอบความทรงจำ 🎵
                 </p>
                 
                 <!-- Hidden Audio Element -->
                 <audio id="bgm" src="https://assets.mixkit.co/music/preview/mixkit-romantic-piano-and-strings-108.mp3" loop preload="auto"></audio>
 
                 <!-- Custom Audio Control -->
-                <button id="playBtn" onclick="toggleAudio()" class="relative flex items-center justify-center gap-3 bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white px-8 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <button id="playBtn" onclick="toggleAudio()" class="relative flex items-center justify-center gap-2 bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white px-6 py-2.5 rounded-full font-medium shadow-md hover:shadow-lg transition-all duration-300">
                     <i id="playIcon" class="fas fa-play"></i>
-                    <span id="playText">Play Our Song</span>
+                    <span id="playText">Play Music</span>
                     
                     <!-- Decorative music notes -->
-                    <div id="musicNotes" class="absolute -top-4 right-2 text-pink-400 hidden animate-bounce-slow text-lg">
+                    <div id="musicNotes" class="absolute -top-3 right-1 text-pink-400 hidden animate-bounce-slow text-sm">
                         <i class="fas fa-music"></i>
                     </div>
                 </button>
             </div>
 
         </div>
-        
-        <!-- Footer -->
-        <p class="text-pink-500/80 text-sm mt-8 font-cute text-center drop-shadow-sm">
-            Made with <i class="fas fa-heart text-pink-500 animate-pulse-slow"></i> just for you
-        </p>
     </div>
 
     <script>
-        // --- 1. BALLOON ANIMATION LOGIC ---
+        // ----------------------------------------------------------------
+        // 1. BALLOON ANIMATION LOGIC
+        // ----------------------------------------------------------------
         const balloonContainer = document.getElementById('balloonContainer');
         const colors = ['#f9a8d4', '#f472b6', '#fbcfe8', '#fda4af', '#fce7f3'];
-        
         const heartSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
 
         function createBalloon() {
@@ -223,8 +211,8 @@
             balloon.classList.add('balloon');
             
             const leftPosition = Math.random() * 100;
-            const animationDuration = Math.random() * 8 + 7;
-            const size = Math.random() * 25 + 20; 
+            const animationDuration = Math.random() * 8 + 6; 
+            const size = Math.random() * 30 + 20; 
             const color = colors[Math.floor(Math.random() * colors.length)];
             
             balloon.style.left = `${leftPosition}vw`;
@@ -242,161 +230,155 @@
             }, animationDuration * 1000);
         }
 
-        setInterval(createBalloon, 800);
+        setInterval(createBalloon, 900);
         for(let i = 0; i < 6; i++) {
-            setTimeout(createBalloon, i * 200);
+            setTimeout(createBalloon, i * 250);
         }
 
-        // --- 2. SYNCHRONIZED SLIDESHOW LOGIC ---
-        // Data array connecting images to specific messages
-        const slideData = [
-            {
-                img: "https://placehold.co/800x600/ffb6c1/ffffff?text=Our+First+Date",
-                text: "รูปนี้จำได้ไหม? เดทแรกของเรา เค้าตื่นเต้นมากเลยนะที่ได้เจอกับคนที่น่ารักขนาดนี้ 😊"
+        // ----------------------------------------------------------------
+        // 2. VERTICAL SLIDESHOW & TEXT SYNC LOGIC
+        // ----------------------------------------------------------------
+        // Note: Using 3:4 or 4:5 aspect ratio placeholders to simulate portrait photos
+        const memories = [
+            { 
+                img: "https://placehold.co/600x800/ffb6c1/ffffff?text=Our+First+Date", 
+                text: "วันแรกที่เราได้เจอกัน รอยยิ้มของเธอทำเอาใจละลายเลยนะ 💖" 
             },
-            {
-                img: "https://github.com/mikaiterng/birthday-my-love/blob/6c92ea63fe7d6a70bfca5f19fbaebdbc04fb2c5b/S__21897219_0.jpg",
-                text: "รูปนี้เป็นรูปชุดแรกที่เธอถ่ายที่เครื่องของชั้นนน ทำใมช่างน่ารักแบบนี้ 😊"
+            { 
+                img: "https://github.com/mikaiterng/birthday-my-love/blob/6c92ea63fe7d6a70bfca5f19fbaebdbc04fb2c5b/S__21897219_0.jpg", 
+                text: "ทุกช่วงเวลาที่มีเธออยู่ข้างๆ คือช่วงเวลาที่ดีที่สุดในชีวิตเค้าเลย 🥰" 
             },
-            {
-                img: "S__21897220_0.jpg",
-                text: "ร้านนี้ เป็นครั้งแรกที่เค้าถามถึงเรื่องโอกาสพัฒนาความสัมพันธ์ เธอตอบสั้น ๆ ถ้าพี่มองหาครอบครัว มองข้ามหนูไปได้เลย แง้ๆๆๆๆๆ"
+            { 
+                img: "https://placehold.co/600x800/ff69b4/ffffff?text=Smiling+Together", 
+                text: "ไม่ว่าวันข้างหน้าจะเป็นยังไง ขอแค่มีเราจับมือกันแบบนี้ตลอดไปนะ 🤝" 
             },
-            {
-                img: "https://placehold.co/800x600/ff69b4/ffffff?text=Smiling+Together",
-                text: "ทุกๆ ครั้งที่เราได้ไปเที่ยวด้วยกัน มันคือช่วงเวลาที่มีความสุขที่สุดในชีวิตเค้าเลย 🚗💨"
-            },
-            {
-                img: "https://placehold.co/800x600/ff1493/ffffff?text=I+Love+You",
-                text: "สุขสันต์วันเกิดนะที่รัก ขอให้เราได้สร้างความทรงจำดีๆ แบบนี้ด้วยกันตลอดไปเลยนะ รักที่สุด! 💖🎂"
+            { 
+                img: "https://placehold.co/600x800/ff1493/ffffff?text=I+Love+You", 
+                text: "สุขสันต์วันเกิดนะคะที่รัก รักเธอที่สุดในโลกเลยยย 🎂✨" 
             }
         ];
 
-        let currentSlideIndex = 0;
-        const slideImage = document.getElementById('slideImage');
-        const slideMessage = document.getElementById('slideMessage');
+        let currentSlide = 0;
+        const track = document.getElementById('sliderTrack');
         const indicatorsContainer = document.getElementById('sliderIndicators');
-        let isTransitioning = false;
 
-        // Initialize Dots
-        function initIndicators() {
-            slideData.forEach((_, index) => {
+        function initSlider() {
+            memories.forEach((memory, index) => {
+                // Create Slide Container
+                const slideWrap = document.createElement('div');
+                slideWrap.className = 'w-full flex-shrink-0 flex flex-col';
+                
+                // Image Section (Vertical Aspect Ratio 3:4)
+                const imgWrap = document.createElement('div');
+                imgWrap.className = 'w-full aspect-[3/4] rounded-lg overflow-hidden shadow-sm relative';
+                imgWrap.innerHTML = `<img src="${memory.img}" class="w-full h-full object-cover" alt="Memory ${index + 1}">`;
+                
+                // Text Section (Attached below the image)
+                const textWrap = document.createElement('div');
+                textWrap.className = 'mt-4 px-2 min-h-[4rem] flex items-center justify-center';
+                textWrap.innerHTML = `<p class="text-gray-700 font-cute text-base md:text-lg leading-relaxed text-center">${memory.text}</p>`;
+
+                // Assemble Slide
+                slideWrap.appendChild(imgWrap);
+                slideWrap.appendChild(textWrap);
+                track.appendChild(slideWrap);
+
+                // Create Dot Indicator
                 const dot = document.createElement('button');
-                dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-pink-500 w-6' : 'bg-pink-300/50 hover:bg-pink-400'}`;
+                dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-pink-500 w-6' : 'bg-pink-200 hover:bg-pink-400'}`;
                 dot.onclick = () => goToSlide(index);
                 indicatorsContainer.appendChild(dot);
             });
         }
 
-        // Render Slide with Smooth Transition
-        function renderSlide(index) {
-            if (isTransitioning) return;
-            isTransitioning = true;
-
-            // Fade out current content
-            slideImage.classList.replace('fade-in', 'fade-out');
-            slideMessage.classList.replace('fade-in', 'fade-out');
-
-            setTimeout(() => {
-                // Update content after fade out
-                slideImage.src = slideData[index].img;
-                slideMessage.innerHTML = slideData[index].text;
-                
-                // Update Dots UI
-                const dots = indicatorsContainer.children;
-                for (let i = 0; i < dots.length; i++) {
-                    if (i === index) {
-                        dots[i].className = 'w-6 h-2.5 rounded-full transition-all duration-300 bg-pink-500 shadow';
-                    } else {
-                        dots[i].className = 'w-2.5 h-2.5 rounded-full transition-all duration-300 bg-pink-300/60 hover:bg-pink-400';
-                    }
+        function updateSliderUI() {
+            // Move track horizontally. Both image and text slide together.
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update dots
+            const dots = indicatorsContainer.children;
+            for (let i = 0; i < dots.length; i++) {
+                if (i === currentSlide) {
+                    dots[i].className = 'w-6 h-2 rounded-full transition-all duration-300 bg-pink-500 shadow-sm';
+                } else {
+                    dots[i].className = 'w-2 h-2 rounded-full transition-all duration-300 bg-pink-200 hover:bg-pink-400';
                 }
-
-                // Wait a tiny bit for the image source to register, then fade in
-                requestAnimationFrame(() => {
-                    slideImage.classList.replace('fade-out', 'fade-in');
-                    slideMessage.classList.replace('fade-out', 'fade-in');
-                    
-                    // Release lock after fade in completes
-                    setTimeout(() => {
-                        isTransitioning = false;
-                    }, 500); 
-                });
-            }, 400); // Wait for fade-out to finish
+            }
         }
 
         function nextSlide() {
-            if (isTransitioning) return;
-            currentSlideIndex = (currentSlideIndex + 1) % slideData.length;
-            renderSlide(currentSlideIndex);
-            resetAutoSlide();
+            currentSlide = (currentSlide + 1) % memories.length;
+            updateSliderUI();
         }
 
         function prevSlide() {
-            if (isTransitioning) return;
-            currentSlideIndex = (currentSlideIndex - 1 + slideData.length) % slideData.length;
-            renderSlide(currentSlideIndex);
-            resetAutoSlide();
+            currentSlide = (currentSlide - 1 + memories.length) % memories.length;
+            updateSliderUI();
         }
 
         function goToSlide(index) {
-            if (isTransitioning || index === currentSlideIndex) return;
-            currentSlideIndex = index;
-            renderSlide(currentSlideIndex);
-            resetAutoSlide();
+            currentSlide = index;
+            updateSliderUI();
         }
 
-        // Auto slide
-        let slideInterval;
-        function startAutoSlide() {
-            slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
-        }
-        
-        function resetAutoSlide() {
-            clearInterval(slideInterval);
-            startAutoSlide();
-        }
+        // Auto slide every 5 seconds
+        let slideInterval = setInterval(nextSlide, 5000);
 
-        // Pause auto-slide on hover over the slideshow area
-        const slideshowGroup = document.querySelector('.group');
-        slideshowGroup.addEventListener('mouseenter', () => clearInterval(slideInterval));
-        slideshowGroup.addEventListener('mouseleave', startAutoSlide);
+        // Pause auto-slide on hover/touch
+        const carousel = document.querySelector('.group');
+        carousel.addEventListener('mouseenter', () => clearInterval(slideInterval));
+        carousel.addEventListener('mouseleave', () => {
+            slideInterval = setInterval(nextSlide, 5000);
+        });
+        carousel.addEventListener('touchstart', () => clearInterval(slideInterval), {passive: true});
 
-        // Initial setup
-        initIndicators();
-        // Set initial content without transition delay
-        slideImage.src = slideData[0].img;
-        slideMessage.innerHTML = slideData[0].text;
-        startAutoSlide();
+        // Initialize Slider
+        initSlider();
 
-        // --- 3. AUDIO PLAYER LOGIC ---
+        // ----------------------------------------------------------------
+        // 3. AUDIO & TOAST NOTIFICATION LOGIC
+        // ----------------------------------------------------------------
         const bgm = document.getElementById('bgm');
         const playBtn = document.getElementById('playBtn');
         const playIcon = document.getElementById('playIcon');
         const playText = document.getElementById('playText');
         const musicNotes = document.getElementById('musicNotes');
+        const toastBox = document.getElementById('toastBox');
+        const toastText = document.getElementById('toastText');
         let isPlaying = false;
+
+        function showToast(message) {
+            toastText.innerText = message;
+            toastBox.classList.remove('opacity-0', '-translate-y-4');
+            toastBox.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toastBox.classList.remove('opacity-100', 'translate-y-0');
+                toastBox.classList.add('opacity-0', '-translate-y-4');
+            }, 3000);
+        }
 
         function toggleAudio() {
             if (isPlaying) {
                 bgm.pause();
                 playIcon.className = 'fas fa-play';
-                playText.innerText = 'Play Our Song';
+                playText.innerText = 'Play Music';
                 playBtn.classList.remove('shadow-[0_0_15px_rgba(236,72,153,0.5)]');
                 musicNotes.classList.add('hidden');
             } else {
                 bgm.play().then(() => {
                     playIcon.className = 'fas fa-pause';
-                    playText.innerText = 'Pause Song';
+                    playText.innerText = 'Pause';
                     playBtn.classList.add('shadow-[0_0_15px_rgba(236,72,153,0.5)]');
                     musicNotes.classList.remove('hidden');
                 }).catch(error => {
-                    console.log("Audio playback was prevented.", error);
-                    // Use custom UI instead of alert, but for brevity in this single file falling back to console
+                    console.log("Audio playback error:", error);
+                    showToast("เบราว์เซอร์บล็อกการเล่นอัตโนมัติ กรุณากดปุ่มอีกครั้งค่ะ");
                 });
             }
             isPlaying = !isPlaying;
         }
+
     </script>
 </body>
 </html>
