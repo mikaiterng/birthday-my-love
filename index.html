@@ -458,7 +458,7 @@
             if (bgm.paused) {
                 bgm.play().catch(error => {
                     console.log("Audio playback error:", error);
-                    showToast("เบราว์เซอร์บล็อกการเล่นอัตโนมัติ กรุณากดอีกครั้ง");
+                    showToast("เบราว์เซอร์บล็อกการเล่นอัตโนมัติ");
                 });
             } else {
                 bgm.pause();
