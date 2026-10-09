@@ -455,25 +455,31 @@
         }
 
         function toggleAudio() {
-            if (isPlaying) {
-                bgm.pause();
-                playIcon.className = 'fas fa-play';
-                playText.innerText = 'Play Music';
-                playBtn.classList.remove('shadow-[0_0_15px_rgba(236,72,153,0.5)]');
-                musicNotes.classList.add('hidden');
-            } else {
-                bgm.play().then(() => {
-                    playIcon.className = 'fas fa-pause';
-                    playText.innerText = 'Pause';
-                    playBtn.classList.add('shadow-[0_0_15px_rgba(236,72,153,0.5)]');
-                    musicNotes.classList.remove('hidden');
-                }).catch(error => {
+            if (bgm.paused) {
+                bgm.play().catch(error => {
                     console.log("Audio playback error:", error);
-                    showToast("เบราว์เซอร์บล็อกการเล่นอัตโนมัติ");
+                    showToast("เบราว์เซอร์บล็อกการเล่นอัตโนมัติ กรุณากดอีกครั้ง");
                 });
+            } else {
+                bgm.pause();
             }
-            isPlaying = !isPlaying;
         }
+
+        // เมื่อเพลงกำลังเล่น
+        bgm.addEventListener('play', () => {
+            playIcon.className = 'fas fa-pause';
+            playText.innerText = 'กำลังเล่นเพลง 🎶';
+            playBtn.classList.add('shadow-[0_0_15px_rgba(236,72,153,0.5)]');
+            musicNotes.classList.remove('hidden');
+        });
+
+        // เมื่อเพลงหยุดเล่น
+        bgm.addEventListener('pause', () => {
+            playIcon.className = 'fas fa-play';
+            playText.innerText = 'เล่นเพลง';
+            playBtn.classList.remove('shadow-[0_0_15px_rgba(236,72,153,0.5)]');
+            musicNotes.classList.add('hidden');
+        });
 
     </script>
 </body>
