@@ -469,43 +469,12 @@
                     musicNotes.classList.remove('hidden');
                 }).catch(error => {
                     console.log("Audio playback error:", error);
-                    showToast("เบราว์เซอร์บล็อกการเล่นอัตโนมัติ กรุณากดปุ่มอีกครั้งค่ะ");
+                    showToast("เบราว์เซอร์บล็อกการเล่นอัตโนมัติ");
                 });
             }
             isPlaying = !isPlaying;
         }
 
     </script>
-    // change icon music play
-    <script>
-    const bgm = document.getElementById('bgm');
-    const playIcon = document.getElementById('playIcon');
-    const playText = document.getElementById('playText');
-    const musicNotes = document.getElementById('musicNotes');
-
-    // ฟังก์ชันสำหรับกดปุ่มเพื่อ เล่น/หยุด เพลง
-    function toggleAudio() {
-        if (bgm.paused) {
-            bgm.play();
-        } else {
-            bgm.pause();
-        }
-    }
-
-    // เมื่อเพลงเริ่มเล่น (ไม่ว่าจะกดปุ่มเอง หรือ autoplay ทำงาน) ให้เปลี่ยนปุ่ม
-    bgm.addEventListener('play', () => {
-        playIcon.className = 'fas fa-pause'; // เปลี่ยนไอคอนเป็นรูปหยุด (Pause)
-        playText.innerText = 'กำลังเล่นเพลง'; // เปลี่ยนข้อความ
-        musicNotes.classList.remove('hidden'); // แสดงตัวโน้ตดนตรี
-    });
-
-    // เมื่อเพลงหยุดเล่น ให้เปลี่ยนปุ่มกลับมาเหมือนเดิม
-    bgm.addEventListener('pause', () => {
-        playIcon.className = 'fas fa-play'; // เปลี่ยนไอคอนเป็นรูปเล่น (Play)
-        playText.innerText = 'เล่นเพลง'; // เปลี่ยนข้อความกลับ
-        musicNotes.classList.add('hidden'); // ซ่อนตัวโน้ตดนตรี
-    });
-    </script>
-    
 </body>
 </html>
