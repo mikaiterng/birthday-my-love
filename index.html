@@ -181,7 +181,7 @@
                 </p>
                 
                 <!-- Hidden Audio Element -->
-                <audio id="bgm" src="BestPart.mp3" loop preload="auto"></audio>
+                <audio id="bgm" src="BestPart.mp3" loop preload="auto" autoplay></audio>
 
                 <!-- Custom Audio Control -->
                 <button id="playBtn" onclick="toggleAudio()" class="relative flex items-center justify-center gap-2 bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white px-6 py-2.5 rounded-full font-medium shadow-md hover:shadow-lg transition-all duration-300">
@@ -475,6 +475,32 @@
             isPlaying = !isPlaying;
         }
 
+    </script>
+    <script>
+        const bgm = document.getElementById('bgm');
+        const playIcon = document.getElementById('playIcon');
+        const playText = document.getElementById('playText');
+        const musicNotes = document.getElementById('musicNotes');
+
+        function toggleAudio() {
+            if (bgm.paused) {
+                bgm.play();
+            } else {
+                bgm.pause();
+            }
+        }
+
+        bgm.addEventListener('play', () => {
+            playIcon.className = 'fas fa-pause'; 
+            playText.innerText = 'กำลังเล่นเพลง'; 
+            musicNotes.classList.remove('hidden'); 
+        });
+
+        bgm.addEventListener('pause', () => {
+            playIcon.className = 'fas fa-play'; 
+            playText.innerText = 'เล่นเพลง'; 
+            musicNotes.classList.add('hidden'); 
+        });
     </script>
 </body>
 </html>
